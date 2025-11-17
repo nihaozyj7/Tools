@@ -1,0 +1,6 @@
+{
+  "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1/",
+  "api_key": "sk-17cfdafd60a145e89d12cde7cbeafad7",
+  "model": "qwen3-next-80b-a3b-instruct",
+  "remember": true
+}
