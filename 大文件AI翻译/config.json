@@ -1,6 +1,6 @@
 {
-  "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1/",
-  "api_key": "sk-17cfdafd60a145e89d12cde7cbeafad7",
-  "model": "qwen3-next-80b-a3b-instruct",
+  "base_url": "https://api-inference.modelscope.cn/v1",
+  "api_key": "ms-7390c432-96a5-4c43-b028-094ab0161c43",
+  "model": "Qwen/Qwen3-235B-A22B-Instruct-2507",
   "remember": true
 }
