@@ -2,15 +2,14 @@ import os
 import sys
 import subprocess
 import hashlib
-from pathlib import Path
-from typing import List, Set
+from typing import List
 
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QHBoxLayout, QPushButton, QListWidget, QLabel,
                              QFileDialog, QMessageBox, QSpinBox, QProgressBar,
-                             QGroupBox, QSizePolicy, QSplitter, QFrame, QLineEdit)
-from PyQt6.QtCore import Qt, QThread, pyqtSignal, QSize
-from PyQt6.QtGui import QIcon, QFont, QPalette, QColor
+                             QGroupBox, QSplitter, QLineEdit)
+from PyQt6.QtCore import Qt, QThread, pyqtSignal
+from PyQt6.QtGui import QFont
 
 
 class CompressionWorker(QThread):

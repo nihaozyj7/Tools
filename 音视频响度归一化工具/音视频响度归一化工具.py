@@ -13,11 +13,10 @@ import subprocess
 from pathlib import Path
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
-    QLabel, QFileDialog, QMessageBox, QProgressBar, QListWidget,
+    QLabel, QFileDialog, QProgressBar, QListWidget,
     QTextEdit, QGroupBox, QCheckBox, QListWidgetItem
 )
 from PyQt6.QtCore import Qt, pyqtSignal, QThread
-from PyQt6.QtGui import QIcon
 
 # ============================================================
 # 工具函数区域

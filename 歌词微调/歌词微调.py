@@ -11,7 +11,6 @@ PyQt6 版 —— 内嵌歌词微调器（界面微调：右下角备份按钮）
 from __future__ import annotations
 
 import sys
-import os
 import threading
 import time
 import shutil
@@ -19,8 +18,7 @@ import re
 from pathlib import Path
 from typing import List, Optional, Tuple
 
-from PyQt6.QtCore import Qt, QTimer, QSize
-from PyQt6.QtGui import QAction, QIcon
+from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,

@@ -13,14 +13,12 @@ import os
 import re
 import json
 import time
-import threading
 from typing import List, Dict, Any, Optional
 import requests
-from PyQt6 import QtWidgets, QtCore
+from PyQt6 import QtCore
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QLabel, QLineEdit, QPushButton, QTextEdit,
-    QFileDialog, QComboBox, QProgressBar, QSpinBox, QRadioButton,
-    QHBoxLayout, QVBoxLayout, QFormLayout, QCheckBox, QMessageBox
+    QFileDialog, QComboBox, QProgressBar, QSpinBox, QHBoxLayout, QVBoxLayout, QFormLayout, QCheckBox, QMessageBox
 )
 
 CONFIG_FILE = "config.json"
