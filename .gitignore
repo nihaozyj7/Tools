@@ -28,4 +28,4 @@ coverage
 *.sw?
 
 *.tsbuildinfo
-config.json
+大文件AI翻译/config.json
