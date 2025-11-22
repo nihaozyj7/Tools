@@ -15,7 +15,7 @@ import json
 import time
 from typing import List, Dict, Any, Optional
 import requests
-from PyQt6 import QtCore
+from PyQt6 import QtCore, QtGui
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QLabel, QLineEdit, QPushButton, QTextEdit,
     QFileDialog, QComboBox, QProgressBar, QSpinBox, QHBoxLayout, QVBoxLayout, QFormLayout, QCheckBox, QMessageBox
@@ -370,6 +370,117 @@ class TranslatorGUI(QWidget):
     def _build_ui(self):
         layout = QVBoxLayout()
         form = QFormLayout()
+        # --- Dark Mode Stylesheet ---
+        self.setStyleSheet("""
+        /* 整体背景 */
+        QWidget {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        /* 输入框和文本编辑框 */
+        QLineEdit, QTextEdit {
+            background-color: #3a3a3a;
+            border: 1px solid #555;
+            border-radius: 6px;
+            padding: 6px;
+            selection-background-color: #555;
+            color: #e0e0e0;
+        }
+        QLineEdit:focus, QTextEdit:focus {
+            border: 1px solid #2ab548;
+        }
+
+        /* 按钮 */
+        QPushButton {
+            background-color: #2ab548;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            color: white;
+            font-weight: bold;
+        }
+        QPushButton:hover {
+            background-color: #31c754;
+        }
+        QPushButton:pressed {
+            background-color: #27a040;
+        }
+        QPushButton:disabled {
+            background-color: #5a5a5a;
+            color: #888;
+        }
+
+        /* 下拉框 */
+        QComboBox {
+            background-color: #3a3a3a;
+            border: 1px solid #555;
+            border-radius: 6px;
+            padding: 4px;
+            color: #e0e0e0;
+        }
+        QComboBox::drop-down {
+            subcontrol-origin: padding;
+            subcontrol-position: top right;
+            width: 20px;
+            border-left-width: 1px;
+            border-left-color: #555;
+            border-left-style: solid;
+        }
+
+        /* SpinBox */
+        QSpinBox {
+            background-color: #3a3a3a;
+            border: 1px solid #555;
+            border-radius: 6px;
+            padding: 4px;
+            color: #e0e0e0;
+        }
+        QSpinBox::up-button, QSpinBox::down-button {
+            subcontrol-origin: border;
+            width: 16px;
+            border: 1px solid #555;
+        }
+
+        /* CheckBox */
+        QCheckBox {
+            spacing: 5px;
+        }
+
+        /* ProgressBar */
+        QProgressBar {
+            border: 1px solid #555;
+            border-radius: 6px;
+            text-align: center;
+            background-color: #3a3a3a;
+        }
+        QProgressBar::chunk {
+            background-color: #2ab548;
+            border-radius: 5px;
+        }
+
+        /* ScrollBar */
+        QScrollBar:vertical {
+            background: #3a3a3a;
+            width: 15px;
+            margin: 15px 3px 15px 3px;
+            border: 1px solid #555;
+            border-radius: 4px;
+        }
+
+        QScrollBar::handle:vertical {
+            background: #555;
+            min-height: 20px;
+            border-radius: 4px;
+        }
+
+        QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+            border: none;
+            background: none;
+        }
+        """)
+        # --- End of Stylesheet ---
 
         # Base URL
         self.base_input = QLineEdit(self.config.get("base_url", ""))

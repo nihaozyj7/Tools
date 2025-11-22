@@ -17,6 +17,7 @@ from PyQt6.QtWidgets import (
     QTextEdit, QGroupBox, QCheckBox, QListWidgetItem
 )
 from PyQt6.QtCore import Qt, pyqtSignal, QThread
+from PyQt6.QtGui import QPalette, QColor
 
 # ============================================================
 # 工具函数区域
@@ -166,10 +167,182 @@ class LoudNormApp(QMainWindow):
         self.setWindowTitle("音视频响度归一化工具")
         self.setGeometry(100, 100, 900, 700)
         self.init_ui()
+        self.apply_dark_theme()
 
         self.process_queue = []
         self.processed_files = set()
         self.current_process_index = 0
+
+    def apply_dark_theme(self):
+        """应用仿微信的暗色主题"""
+        dark_palette = QPalette()
+
+        # 主色调 - 微信暗色模式常用灰黑色系
+        dark_color = QColor(30, 30, 30)          # 主背景色 (#1E1E1E)
+        darker_color = QColor(24, 24, 24)       # 更深的背景色 (#181818)
+        light_color = QColor(210, 210, 210)     # 主文字颜色
+        highlight_color = QColor(29, 180, 88)   # 微信绿色高亮 (#1DB958)
+
+        # 设置调色板颜色
+        dark_palette.setColor(QPalette.ColorRole.Window, dark_color)
+        dark_palette.setColor(QPalette.ColorRole.WindowText, light_color)
+        dark_palette.setColor(QPalette.ColorRole.Base, darker_color)
+        dark_palette.setColor(QPalette.ColorRole.AlternateBase, dark_color)
+        dark_palette.setColor(QPalette.ColorRole.ToolTipBase, light_color)
+        dark_palette.setColor(QPalette.ColorRole.ToolTipText, dark_color)
+        dark_palette.setColor(QPalette.ColorRole.Text, light_color)
+        dark_palette.setColor(QPalette.ColorRole.Button, dark_color)
+        dark_palette.setColor(QPalette.ColorRole.ButtonText, light_color)
+        dark_palette.setColor(QPalette.ColorRole.BrightText, Qt.GlobalColor.red)
+        dark_palette.setColor(QPalette.ColorRole.Highlight, highlight_color)
+        dark_palette.setColor(QPalette.ColorRole.HighlightedText, QColor(30, 30, 30))
+
+        self.setPalette(dark_palette)
+
+        # 应用全局样式表
+        self.setStyleSheet(f"""
+            QMainWindow {{
+                background-color: #1E1E1E;
+            }}
+
+            QWidget {{
+                background-color: #1E1E1E;
+                color: #D2D2D2;
+                font-family: "Microsoft YaHei", sans-serif;
+            }}
+
+            QPushButton {{
+                background-color: #2A2A2A;
+                border: 1px solid #3A3A3A;
+                padding: 8px 16px;
+                border-radius: 6px;
+                color: #D2D2D2;
+                min-height: 20px;
+            }}
+
+            QPushButton:hover {{
+                background-color: #3A3A3A;
+                border: 1px solid #1DB958;
+            }}
+
+            QPushButton:pressed {{
+                background-color: #1DB958;
+                border: 1px solid #1DB958;
+            }}
+
+            QPushButton#addFilesBtn {{
+                background-color: #1DB958;
+                border: none;
+                color: white;
+            }}
+
+            QPushButton#addFoldersBtn {{
+                background-color: #1DB958;
+                border: none;
+                color: white;
+            }}
+
+            QPushButton#clearBtn {{
+                background-color: #C23535;
+                border: none;
+                color: white;
+            }}
+
+            QPushButton#processBtn {{
+                background-color: #1DB958;
+                border: none;
+                color: white;
+                font-size: 16px;
+                padding: 10px;
+                border-radius: 6px;
+            }}
+
+            QLabel {{
+                color: #D2D2D2;
+            }}
+
+            QGroupBox {{
+                border: 1px solid #3A3A3A;
+                border-radius: 6px;
+                margin-top: 1ex;
+                padding-top: 10px;
+                background-color: #2A2A2A;
+            }}
+
+            QGroupBox::title {{
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px 0 5px;
+                color: #D2D2D2;
+            }}
+
+            QListWidget, QTextEdit {{
+                background-color: #2A2A2A;
+                border: 1px solid #3A3A3A;
+                border-radius: 6px;
+                color: #D2D2D2;
+                selection-background-color: #1DB958;
+                selection-color: #1E1E1E;
+            }}
+
+            QProgressBar {{
+                border: 1px solid #3A3A3A;
+                border-radius: 6px;
+                text-align: center;
+                background-color: #2A2A2A;
+            }}
+
+            QProgressBar::chunk {{
+                background-color: #1DB958;
+                border-radius: 5px;
+            }}
+
+            QCheckBox {{
+                color: #D2D2D2;
+                spacing: 5px;
+            }}
+
+            QCheckBox::indicator {{
+                width: 18px;
+                height: 18px;
+            }}
+
+            QCheckBox::indicator:unchecked {{
+                border: 1px solid #3A3A3A;
+                background-color: #2A2A2A;
+            }}
+
+            QCheckBox::indicator:checked {{
+                border: 1px solid #1DB958;
+                background-color: #1DB958;
+            }}
+
+            QScrollBar:vertical {{
+                border: none;
+                background-color: #2A2A2A;
+                width: 14px;
+                margin: 15px 0 15px 0;
+                border-radius: 0px;
+            }}
+
+            QScrollBar::handle:vertical {{
+                background-color: #3A3A3A;
+                min-height: 30px;
+                border-radius: 7px;
+            }}
+
+            QScrollBar::handle:vertical:hover {{
+                background-color: #1DB958;
+            }}
+
+            QScrollBar::sub-line:vertical {{
+                height: 0px;
+            }}
+
+            QScrollBar::add-line:vertical {{
+                height: 0px;
+            }}
+        """)
 
     def init_ui(self):
         """初始化 UI 布局"""
@@ -180,20 +353,23 @@ class LoudNormApp(QMainWindow):
         # 标题
         title_label = QLabel("音视频响度归一化工具")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        title_label.setStyleSheet("font-size: 18px; font-weight: bold; margin: 11px;")
+        title_label.setObjectName("titleLabel")
+        title_label.setStyleSheet("font-size: 18px; font-weight: bold; margin: 11px; color: #FFFFFF;")
         main_layout.addWidget(title_label)
 
         # 按钮区
         btn_layout = QHBoxLayout()
         self.add_files_btn = QPushButton("添加文件")
+        self.add_files_btn.setObjectName("addFilesBtn")
         self.add_files_btn.clicked.connect(self.add_files)
-        self.add_folders_btn = QPushButton("添加文件夹")
-        self.add_folders_btn.clicked.connect(self.add_folders)
-        self.clear_btn = QPushButton("清空队列")
-        self.clear_btn.clicked.connect(self.clear_queue)
 
-        for btn, color in [(self.add_files_btn, "#2196F3"), (self.add_folders_btn, "#2196F3"), (self.clear_btn, "#f44336")]:
-            btn.setStyleSheet(f"padding:8px; color:white; background-color:{color}")
+        self.add_folders_btn = QPushButton("添加文件夹")
+        self.add_folders_btn.setObjectName("addFoldersBtn")
+        self.add_folders_btn.clicked.connect(self.add_folders)
+
+        self.clear_btn = QPushButton("清空队列")
+        self.clear_btn.setObjectName("clearBtn")
+        self.clear_btn.clicked.connect(self.clear_queue)
 
         btn_layout.addWidget(self.add_files_btn)
         btn_layout.addWidget(self.add_folders_btn)
@@ -220,7 +396,7 @@ class LoudNormApp(QMainWindow):
         progress_layout.addWidget(self.progress_bar)
 
         self.process_btn = QPushButton("开始处理队列")
-        self.process_btn.setStyleSheet("font-size:16px; padding:10px; background-color:#4CAF50; color:white;")
+        self.process_btn.setObjectName("processBtn")
         self.process_btn.setEnabled(False)
         self.process_btn.clicked.connect(self.start_processing_queue)
         progress_layout.addWidget(self.process_btn)
@@ -231,13 +407,14 @@ class LoudNormApp(QMainWindow):
         log_layout = QVBoxLayout()
         self.log_text = QTextEdit()
         self.log_text.setReadOnly(True)
-        self.log_text.setStyleSheet("font-family: Consolas; font-size: 12px;")
+        self.log_text.setStyleSheet("font-family: Consolas, Microsoft YaHei; font-size: 12px;")
         log_layout.addWidget(self.log_text)
         log_group.setLayout(log_layout)
         main_layout.addWidget(log_group)
 
         # 状态栏
         self.status_label = QLabel("就绪 - 请添加文件或文件夹")
+        self.status_label.setStyleSheet("margin: 5px; color: #AAAAAA;")
         main_layout.addWidget(self.status_label)
 
     # ========== 文件管理 ==========

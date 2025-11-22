@@ -11,17 +11,28 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLineEdit,
     QMessageBox,
+    QSpacerItem,
+    QSizePolicy
 )
+from PyQt6.QtGui import QFont, QColor, QPalette
+from PyQt6.QtCore import Qt
 
 
 class VideoFrameExtractor(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
+        self.apply_dark_theme()  # 应用仿微信暗色模式
 
     def initUI(self):
         # 主布局
         layout = QVBoxLayout()
+
+        # 标题标签（可选，增强用户体验）
+        self.title_label = QLabel("视频尾帧提取器")
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.title_label.setFont(QFont("Microsoft YaHei", 14, QFont.Weight.Bold))
+        layout.addWidget(self.title_label)
 
         # 文件选择部分
         file_layout = QHBoxLayout()
@@ -57,9 +68,81 @@ class VideoFrameExtractor(QWidget):
         layout.addLayout(output_layout)
         layout.addLayout(button_layout)
 
+        # 底部留白（视觉平衡）
+        layout.addItem(QSpacerItem(0, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding))
+
         self.setLayout(layout)
         self.setWindowTitle('视频尾帧提取器')
-        self.resize(500, 150)
+        self.resize(500, 160)
+
+    def apply_dark_theme(self):
+        """应用仿微信暗色模式样式"""
+        # 设置全局调色板为深色主题
+        palette = QPalette()
+        palette.setColor(QPalette.ColorRole.Window, QColor("#1a1a1a"))  # 背景
+        palette.setColor(QPalette.ColorRole.WindowText, QColor("#ffffff"))  # 文字
+        palette.setColor(QPalette.ColorRole.Base, QColor("#2d2d2d"))  # 输入框背景
+        palette.setColor(QPalette.ColorRole.AlternateBase, QColor("#3a3a3a"))
+        palette.setColor(QPalette.ColorRole.ToolTipBase, QColor("#2d2d2d"))
+        palette.setColor(QPalette.ColorRole.ToolTipText, QColor("#ffffff"))
+        palette.setColor(QPalette.ColorRole.Text, QColor("#ffffff"))
+        palette.setColor(QPalette.ColorRole.Button, QColor("#2d2d2d"))
+        palette.setColor(QPalette.ColorRole.ButtonText, QColor("#ffffff"))
+        palette.setColor(QPalette.ColorRole.BrightText, QColor("#ffffff"))
+        palette.setColor(QPalette.ColorRole.Link, QColor("#007aff"))
+        palette.setColor(QPalette.ColorRole.Highlight, QColor("#007aff"))
+        palette.setColor(QPalette.ColorRole.HighlightedText, QColor("#ffffff"))
+
+        self.setPalette(palette)
+
+        # 设置字体颜色和背景色
+        self.setStyleSheet("""
+            QWidget {
+                background-color: #1a1a1a;
+                color: #ffffff;
+                font-family: "Microsoft YaHei";
+                font-size: 10pt;
+            }
+            QLabel {
+                color: #ffffff;
+                padding: 5px;
+            }
+            QLineEdit {
+                background-color: #2d2d2d;
+                color: #ffffff;
+                border: 1px solid #444444;
+                border-radius: 4px;
+                padding: 5px;
+            }
+            QPushButton {
+                background-color: #007aff;
+                color: #ffffff;
+                border: none;
+                border-radius: 6px;
+                padding: 8px 16px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #0056b3;
+            }
+            QPushButton:pressed {
+                background-color: #003d7a;
+            }
+            QMessageBox {
+                background-color: #1a1a1a;
+                color: #ffffff;
+            }
+            QMessageBox QPushButton {
+                background-color: #007aff;
+                color: #ffffff;
+                border: none;
+                border-radius: 4px;
+                padding: 5px 10px;
+            }
+            QMessageBox QPushButton:hover {
+                background-color: #0056b3;
+            }
+        """)
 
     def select_file(self):
         """选择输入的 MP4 文件"""

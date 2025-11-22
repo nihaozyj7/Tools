@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QFileDialog, QMessageBox, QSpinBox, QProgressBar,
                              QGroupBox, QSplitter, QLineEdit)
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QFont, QColor, QPalette
 
 
 class CompressionWorker(QThread):
@@ -140,6 +140,7 @@ class ImageCompressor(QMainWindow):
         self.file_hashes = set()
         self.worker = None
         self.init_ui()
+        self.apply_dark_theme() # 应用暗色主题
 
     def init_ui(self):
         """初始化用户界面"""
@@ -287,6 +288,165 @@ class ImageCompressor(QMainWindow):
         self.output_directory = desktop_path
         self.output_path_edit.setText(desktop_path)
 
+
+    def apply_dark_theme(self):
+        """应用仿微信的暗色主题样式"""
+        # 定义暗色调色板
+        # 微信深色模式的主色调通常是深灰色背景(#1e1e1e 或接近)，控件使用 slightly lighter 的灰色
+        dark_palette = self.palette()
+
+        # 基础深色 (类似微信聊天背景)
+        dark_color = QColor(30, 30, 30) # #1e1e1e
+        # 控件背景色 (略亮于主背景)
+        darker_color = QColor(45, 45, 45) # #2d2d2d
+        # 更亮一些的颜色，用于按钮等 (类似微信输入框/按钮)
+        even_darker_color = QColor(60, 60, 60) # #3c3c3c
+        # 文字颜色 (白色或浅灰色)
+        text_color = QColor(255, 255, 255) # 白色
+        # 次要文字颜色 (用于禁用状态)
+        disabled_color = QColor(150, 150, 150) # 灰色
+
+        # --- 正确设置调色板颜色 ---
+        # 设置 Active (正常) 状态下的颜色
+        dark_palette.setColor(QPalette.ColorGroup.Active, QPalette.ColorRole.Window, dark_color)
+        dark_palette.setColor(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, text_color)
+        dark_palette.setColor(QPalette.ColorGroup.Active, QPalette.ColorRole.Base, darker_color)
+        dark_palette.setColor(QPalette.ColorGroup.Active, QPalette.ColorRole.AlternateBase, dark_color)
+        dark_palette.setColor(QPalette.ColorGroup.Active, QPalette.ColorRole.ToolTipBase, dark_color)
+        dark_palette.setColor(QPalette.ColorGroup.Active, QPalette.ColorRole.ToolTipText, text_color)
+        dark_palette.setColor(QPalette.ColorGroup.Active, QPalette.ColorRole.Text, text_color)
+        dark_palette.setColor(QPalette.ColorGroup.Active, QPalette.ColorRole.Button, even_darker_color)
+        dark_palette.setColor(QPalette.ColorGroup.Active, QPalette.ColorRole.ButtonText, text_color)
+        dark_palette.setColor(QPalette.ColorGroup.Active, QPalette.ColorRole.BrightText, Qt.GlobalColor.red)
+        dark_palette.setColor(QPalette.ColorGroup.Active, QPalette.ColorRole.Link, QColor(41, 128, 185))
+        dark_palette.setColor(QPalette.ColorGroup.Active, QPalette.ColorRole.Highlight, QColor(41, 128, 185)) # 蓝色高亮
+        dark_palette.setColor(QPalette.ColorGroup.Active, QPalette.ColorRole.HighlightedText, QColor(255, 255, 255))
+
+        # --- 关键修正：正确设置 Disabled (禁用) 状态下的颜色 ---
+        # 对于禁用状态，需要单独设置其颜色组
+        dark_palette.setColor(QPalette.ColorGroup.Disabled, QPalette.ColorRole.Text, disabled_color)
+        dark_palette.setColor(QPalette.ColorGroup.Disabled, QPalette.ColorRole.ButtonText, disabled_color)
+        dark_palette.setColor(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, disabled_color)
+        dark_palette.setColor(QPalette.ColorGroup.Disabled, QPalette.ColorRole.HighlightedText, disabled_color)
+
+        self.setPalette(dark_palette)
+
+        # 应用全局样式表，精细调整特定控件
+        self.setStyleSheet(f"""
+            QMainWindow {{
+                background-color: {dark_color.name()};
+            }}
+            QWidget {{
+                background-color: {dark_color.name()};
+                color: {text_color.name()};
+            }}
+            QGroupBox {{
+                font-weight: bold;
+                border: 1px solid {even_darker_color.name()};
+                margin-top: 1ex;
+                padding-top: 10px;
+                border-radius: 5px;
+            }}
+            QGroupBox::title {{
+                subline-offset: -2px;
+                padding: 0px 5px;
+                color: {text_color.name()}; /* 确保组标题也是白色 */
+            }}
+            QPushButton {{
+                background-color: {even_darker_color.name()};
+                border: 1px solid {QColor(80, 80, 80).name()}; /* 按钮边框 */
+                border-radius: 5px;
+                padding: 5px;
+                min-width: 80px;
+                color: {text_color.name()};
+            }}
+            QPushButton:hover {{
+                background-color: {QColor(70, 70, 70).name()}; /* 悬停效果 */
+            }}
+            QPushButton:pressed {{
+                background-color: {QColor(50, 50, 50).name()}; /* 按下效果 */
+            }}
+            QPushButton:disabled {{
+                background-color: {QColor(40, 40, 40).name()}; /* 禁用状态背景 */
+                color: {disabled_color.name()}; /* 禁用状态文字 */
+                border: 1px solid {QColor(50, 50, 50).name()}; /* 禁用状态边框 */
+            }}
+            QListWidget {{
+                background-color: {darker_color.name()};
+                border: 1px solid {even_darker_color.name()};
+                border-radius: 5px;
+                color: {text_color.name()};
+            }}
+            QListWidget::item {{
+                padding: 5px;
+            }}
+            QListWidget::item:selected {{
+                background-color: {QColor(41, 128, 185).name()}; /* 选中项蓝色 */
+            }}
+            QLineEdit {{
+                background-color: {darker_color.name()};
+                border: 1px solid {even_darker_color.name()};
+                border-radius: 5px;
+                padding: 5px;
+                color: {text_color.name()};
+            }}
+            QLineEdit:disabled {{
+                color: {disabled_color.name()};
+                background-color: {QColor(40, 40, 40).name()};
+                border: 1px solid {QColor(50, 50, 50).name()};
+            }}
+            QSpinBox {{
+                background-color: {darker_color.name()};
+                border: 1px solid {even_darker_color.name()};
+                border-radius: 5px;
+                padding: 5px;
+                color: {text_color.name()};
+            }}
+            QSpinBox:disabled {{
+                color: {disabled_color.name()};
+                background-color: {QColor(40, 40, 40).name()};
+                border: 1px solid {QColor(50, 50, 50).name()};
+            }}
+            QProgressBar {{
+                border: 1px solid {even_darker_color.name()};
+                border-radius: 5px;
+                text-align: center;
+                background-color: {darker_color.name()};
+            }}
+            QProgressBar::chunk {{
+                background-color: {QColor(41, 128, 185).name()}; /* 进度条填充色 */
+                border-radius: 4px;
+            }}
+            QLabel {{
+                color: {text_color.name()};
+            }}
+            /* 特别指定状态标签的颜色，以防被继承影响 */
+            QLabel#status_label {{
+                color: {text_color.name()};
+            }}
+            QMessageBox {{
+                background-color: {dark_color.name()};
+            }}
+            QMessageBox QLabel {{
+                color: {text_color.name()};
+            }}
+            QMessageBox QPushButton {{
+                background-color: {even_darker_color.name()};
+                border: 1px solid {QColor(80, 80, 80).name()};
+                border-radius: 5px;
+                padding: 5px;
+                min-width: 80px;
+                color: {text_color.name()};
+            }}
+            QMessageBox QPushButton:disabled {{
+                background-color: {QColor(40, 40, 40).name()};
+                color: {disabled_color.name()};
+                border: 1px solid {QColor(50, 50, 50).name()};
+            }}
+        """)
+
+
+    # --- 以下方法保持不变 ---
 
     def add_images(self):
         """添加图片到列表"""
